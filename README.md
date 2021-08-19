@@ -1,1 +1,1 @@
-# Serverless Template
+# CDN Images

@@ -1,0 +1,120 @@
+{
+  "Records": [
+    {
+      "cf": {
+        "config": {
+          "distributionDomainName": "d1lth2tce076f0.cloudfront.net",
+          "distributionId": "E1MP7UOCN21POF",
+          "eventType": "origin-response",
+          "requestId": "iZiLN8bKvnVWYbPmKFvuN_RNS6LyBe-Yqkvs-mbis7uUuHW4fqSrrg=="
+        },
+        "request": {
+          "clientIp": "149.154.161.7",
+          "headers": {
+            "x-forwarded-for": [
+              {
+                "key": "X-Forwarded-For",
+                "value": "149.154.161.7"
+              }
+            ],
+            "user-agent": [
+              {
+                "key": "User-Agent",
+                "value": "Amazon CloudFront"
+              }
+            ],
+            "via": [
+              {
+                "key": "Via",
+                "value": "1.1 a390f799acc33be35de7bc42ed295f39.cloudfront.net (CloudFront)"
+              }
+            ],
+            "accept-encoding": [
+              {
+                "key": "Accept-Encoding",
+                "value": "gzip"
+              }
+            ],
+            "host": [
+              {
+                "key": "Host",
+                "value": "cdn.hikick.kr.s3.amazonaws.com"
+              }
+            ]
+          },
+          "method": "GET",
+          "origin": {
+            "s3": {
+              "authMethod": "none",
+              "customHeaders": {},
+              "domainName": "cdn.staging.hikick.kr.s3.ap-northeast-2.amazonaws.com",
+              "path": ""
+            }
+          },
+          "querystring": "",
+          "uri": "/images/test"
+        },
+        "response": {
+          "headers": {
+            "x-amz-id-2": [
+              {
+                "key": "x-amz-id-2",
+                "value": "aFlIvR2QchAgJp/VLsyTk+0yvojNyKdFADfmEp8ZwEkEZppxMRulV7rvJeobCeJv+KaqiLTxNoU="
+              }
+            ],
+            "x-amz-request-id": [
+              {
+                "key": "x-amz-request-id",
+                "value": "RTCC85DGDASFSJ8K"
+              }
+            ],
+            "date": [
+              {
+                "key": "Date",
+                "value": "Tue, 17 Aug 2021 13:23:44 GMT"
+              }
+            ],
+            "last-modified": [
+              {
+                "key": "Last-Modified",
+                "value": "Tue, 17 Aug 2021 13:12:28 GMT"
+              }
+            ],
+            "etag": [
+              {
+                "key": "ETag",
+                "value": "\"2756340390d36a9e2b6ef6c8dc059bc1\""
+              }
+            ],
+            "accept-ranges": [
+              {
+                "key": "Accept-Ranges",
+                "value": "bytes"
+              }
+            ],
+            "server": [
+              {
+                "key": "Server",
+                "value": "AmazonS3"
+              }
+            ],
+            "content-type": [
+              {
+                "key": "Content-Type",
+                "value": "image/webp"
+              }
+            ],
+            "content-length": [
+              {
+                "key": "Content-Length",
+                "value": "728680"
+              }
+            ]
+          },
+          "status": "200",
+          "statusDescription": "OK"
+        }
+      }
+    }
+  ]
+}
