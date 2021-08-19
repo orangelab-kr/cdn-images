@@ -1,46 +1,35 @@
-import { NextFunction, Request, Response } from 'express';
+import { Context } from 'aws-lambda';
 import { ValidationError } from 'joi';
-import { logger, OPCODE } from '..';
+import {
+  CloudfrontEvent,
+  CloudfrontEventCfResponse,
+  setBody,
+} from './cloudfront';
 
 export type Callback = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => Promise<unknown>;
+  event: CloudfrontEvent,
+  context: Context,
+  callback: (
+    error?: Error | string | null,
+    result?: CloudfrontEventCfResponse
+  ) => void
+) => void;
 
-export function Wrapper(cb: Callback): Callback {
-  return async function (req: Request, res: Response, next: NextFunction) {
+export const Wrapper: (cb: Callback) => Callback =
+  (cb: Callback) => async (event, context, callback) => {
     try {
-      return await cb(req, res, next);
+      return await cb(event, context, callback);
     } catch (err) {
-      if (process.env.NODE_ENV !== 'prod') {
-        logger.error(err.message);
-        logger.error(err.stack);
-      }
+      const { response } = event.Records[0].cf;
+      const { message, details } = err;
 
-      let status = 500;
-      let opcode = OPCODE.ERROR;
-      let message = '알 수 없는 오류가 발생했습니다.';
-      let details;
-
-      if (err.name === 'InternalError') {
-        opcode = err.opcode;
-        message = err.message;
-        details = err.details;
-      }
-
+      response.status = 500;
+      setBody(response, { message });
       if (err instanceof ValidationError) {
-        status = 400;
-        message = '올바른 정보를 입력해주세요.';
-        details = err.details;
+        response.status = 400;
+        setBody(response, { message, details });
       }
 
-      if (res.headersSent) return;
-      res.status(status).json({
-        opcode,
-        message,
-        details,
-      });
+      callback(null, response);
     }
   };
-}
