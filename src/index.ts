@@ -2,10 +2,7 @@ import { S3 } from 'aws-sdk';
 import qs from 'qs';
 import Sharp from 'sharp';
 import { Joi, setHeader, Wrapper } from '.';
-import {
-  CloudfrontEventCfRequestOrigin,
-  CloudfrontEventCfResponse,
-} from './tools';
+import { CloudfrontEventCfRequestOrigin } from './tools';
 
 export * from './tools';
 
@@ -99,7 +96,7 @@ async function getObject(props: {
   return obj.Body;
 }
 
-function getSize(first?: number, second?: number, third?: number) {
+function getSize(first?: number, second?: number, third?: number): number {
   return Math.min(
     first || Number.MAX_SAFE_INTEGER,
     second || Number.MAX_SAFE_INTEGER,
