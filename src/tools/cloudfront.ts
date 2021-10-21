@@ -70,7 +70,7 @@ export const setHeader = (
   key: string,
   value: string
 ): void => {
-  response.headers[key] = [{ key, value }];
+  response.headers[key.toLowerCase()] = [{ key, value }];
 };
 
 export const setBody = (

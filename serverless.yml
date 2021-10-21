@@ -5,7 +5,7 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: us-east-1
-  stage: ${opt:stage, 'stage'}
+  stage: stage
   lambdaHashingVersion: '20201221'
 
 package:
@@ -24,11 +24,19 @@ custom:
         - SHARP_IGNORE_GLOBAL_LIBVIPS=1 npm_config_arch=x64 npm_config_platform=linux yarn add --force sharp
 
 functions:
-  app:
-    handler: src/index.handler
+  images:
+    handler: src/images.handler
     events:
       - preExistingCloudFront:
           distributionId: ${env:CLOUDFRONT_DISTRIBUTION_ID}
           eventType: origin-response
           pathPattern: /images/**
+          includeBody: false
+  maps:
+    handler: src/maps.handler
+    events:
+      - preExistingCloudFront:
+          distributionId: ${env:CLOUDFRONT_DISTRIBUTION_ID}
+          eventType: origin-response
+          pathPattern: /maps
           includeBody: false

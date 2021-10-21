@@ -19,7 +19,7 @@ export const Wrapper: (cb: Callback) => Callback =
   (cb: Callback) => async (event, context, callback) => {
     try {
       return await cb(event, context, callback);
-    } catch (err) {
+    } catch (err: any) {
       const { response } = event.Records[0].cf;
       const { message, details } = err;
 

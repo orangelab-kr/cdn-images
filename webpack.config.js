@@ -2,6 +2,7 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 const slsw = require('serverless-webpack');
+const { EnvironmentPlugin } = require('webpack');
 
 module.exports = {
   mode: 'none',
@@ -20,6 +21,12 @@ module.exports = {
       },
     ],
   },
+  plugins: [
+    new EnvironmentPlugin({
+      NCP_APIGW_API_KEY_ID: process.env.NCP_APIGW_API_KEY_ID,
+      NCP_APIGW_API_KEY: process.env.NCP_APIGW_API_KEY,
+    }),
+  ],
   output: {
     libraryTarget: 'commonjs',
     filename: '[name].js',
