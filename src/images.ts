@@ -3,6 +3,7 @@ import qs from 'qs';
 import Sharp from 'sharp';
 import { Joi, setHeader, Wrapper } from '.';
 import { CloudfrontEventCfRequestOrigin } from './tools';
+import crypto from 'crypto';
 
 const maxHeight = 2048;
 const maxWidth = 2048;
@@ -26,6 +27,7 @@ interface ImageOptions {
   quality: number;
   format: Format;
   position: Position;
+  key?: string;
 }
 
 export const handler = Wrapper(async (event, context, callback) => {
@@ -66,6 +68,7 @@ async function getOptions(querystring: string): Promise<ImageOptions> {
     q: quality,
     p: position,
     f: format,
+    k: key,
   } = await Joi.object({
     w: Joi.number().min(10).max(maxWidth).optional(),
     h: Joi.number().min(10).max(maxHeight).optional(),
@@ -78,8 +81,9 @@ async function getOptions(querystring: string): Promise<ImageOptions> {
       .valid(...SupportFormat)
       .default('webp')
       .optional(),
+    k: Joi.string().optional(),
   }).validateAsync(qs.parse(querystring));
-  return { width, height, quality, format, position };
+  return { width, height, quality, format, position, key };
 }
 
 async function getObject(props: {
@@ -88,7 +92,7 @@ async function getObject(props: {
 }): Promise<Buffer> {
   const { bucket, uri } = props;
   const obj = await s3
-    .getObject({ Bucket: bucket, Key: uri.substr(1) })
+    .getObject({ Bucket: bucket, Key: uri.substring(1) })
     .promise();
   if (!(obj.Body instanceof Buffer)) throw Error(`${uri} is not found.`);
   return obj.Body;
@@ -106,6 +110,17 @@ async function getConvertedImage(props: {
   object: Buffer;
   options: ImageOptions;
 }): Promise<Buffer> {
+  if (props.options.key) {
+    const algorithm = 'aes-256-cbc';
+    const iv = Buffer.alloc(16, 0);
+    const cryptedKey = crypto.scryptSync(props.options.key, 'salt', 32);
+    const decipher = crypto.createDecipheriv(algorithm, cryptedKey, iv);
+    props.object = Buffer.concat([
+      decipher.update(props.object),
+      decipher.final(),
+    ]);
+  }
+
   const { object, options } = props;
   const { quality, position } = options;
   const sharp = Sharp(object);
